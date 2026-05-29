@@ -568,10 +568,7 @@ const topics = [
       }
     ],
     steps: [
-      "ใช้มือลูบรอบขอบดุมล้อ ถ้ามีจารบีเปียกหรือหยดลงพื้น นั่นคือซีลรั่ว",
-      "สังเกตผ้าเบรกและจานเบรกว่ามีคราบจารบีเปื้อนหรือไม่ ถ้าเปื้อนเบรกจะเสื่อมประสิทธิภาพ",
-      "หมุนล้อด้วยมือฟังเสียงลูกปืน ถ้ามีเสียงหรือฝืดผิดปกติแสดงว่าจารบีหมดแล้ว",
-      "ถ้าพบรั่วต้องเปลี่ยนซีลทันที ห้ามปล่อยทิ้งไว้เพราะเสี่ยงล้อล็อคกลางทาง"
+      "สังเกตรอยรั่วซึมของจารบีบริเวณดุมล้อและซีลล้อ หรือหากเห็นมีคราบน้ำมันบริเวณส่วนล้อ ให้สันนิษฐานว่าจารบีหรือประเก็น/ซีลจารบี เสื่อมสภาพ"
     ]
   },
   {
@@ -923,7 +920,6 @@ function renderTopics() {
 
 function showDetail(id) {
   const t = topics.find(x => x.id === id);
-  const s = scripts.find(x => x.id === id);
   const severityColors = {
     medium: { color: '#F59E0B', bg: '#FEF3C7' },
     high: { color: '#F97316', bg: '#FFF7ED' },
@@ -937,7 +933,6 @@ function showDetail(id) {
         <h2>${t.title}</h2>
         <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:6px">
           <span class="pill-badge">${t.category}</span>
-          <span class="pill-badge" style="background:#F0FDF4;color:#166534;border-color:#BBF7D0">ราคาประเมิน ${s.cost}</span>
         </div>
       </div>
     </div>
@@ -982,45 +977,27 @@ function showDetail(id) {
               <span class="step-num">${String(i+1).padStart(2,'0')}</span>
               <span class="step-text">${step}</span>
             </div>
-            <div class="img-upload-box" id="imgbox-${t.id}-${i}" onclick="triggerImgUpload('${t.id}-${i}')" style="min-height:90px">
-              <input type="file" id="imginput-${t.id}-${i}" accept="image/*" onchange="handleImgUpload('${t.id}-${i}', this)">
-              <span class="upload-label">คลิกเพื่อเลือกรูปขั้นตอนนี้</span>
-              <button class="img-remove-btn" onclick="removeImg(event,'${t.id}-${i}')"></button>
-            </div>
+            ${t.id === 1 && i === 0 ? `
+              <div style="display:flex;flex-direction:column;gap:8px">
+                <div style="font-size:11px;font-weight:700;color:#92400E;letter-spacing:0.06em;text-transform:uppercase;margin-bottom:4px">สภาพของจารบีรั่วซึม</div>
+                <div style="display:flex;gap:8px;flex-wrap:wrap">
+                  <img src="รั่ว2.jpg" style="width:calc(33% - 6px);border-radius:10px;object-fit:cover;aspect-ratio:1/1" onerror="this.style.display='none'">
+                  <img src="รั่ว1.jfif" style="width:calc(33% - 6px);border-radius:10px;object-fit:cover;aspect-ratio:1/1" onerror="this.style.display='none'">
+                  <img src="รั่ว3.jfif" style="width:calc(33% - 6px);border-radius:10px;object-fit:cover;aspect-ratio:1/1" onerror="this.style.display='none'">
+                </div>
+              </div>
+            ` : `
+              <div class="img-upload-box" id="imgbox-${t.id}-${i}" onclick="triggerImgUpload('${t.id}-${i}')" style="min-height:90px">
+                <input type="file" id="imginput-${t.id}-${i}" accept="image/*" onchange="handleImgUpload('${t.id}-${i}', this)">
+                <span class="upload-label">คลิกเพื่อเลือกรูปขั้นตอนนี้</span>
+                <button class="img-remove-btn" onclick="removeImg(event,'${t.id}-${i}')"></button>
+              </div>
+            `}
           </div>
         `).join('')}
       </div>
     </div>
 
-    <div class="sa-divider">
-      <span>Script สำหรับ SA</span>
-    </div>
-
-    <div class="script-card" style="margin-top:16px">
-      <div style="margin-bottom:14px">
-        <div class="info-box-label" style="margin-bottom:10px">จุดสำคัญที่ต้องพูด</div>
-        <div class="points-list">
-          ${s.points.map(p => `
-            <div class="point-item">
-              <span class="point-dot"></span>
-              <span>${p}</span>
-            </div>
-          `).join('')}
-        </div>
-      </div>
-
-      <div class="info-box-label" style="margin-bottom:6px">Script เต็ม</div>
-      <div class="script-bubble">
-        <p>${s.script}</p>
-      </div>
-      <div class="tip-box">
-        <span class="tip-label">เทคนิค — </span>
-        <span class="tip-text">${s.tip}</span>
-      </div>
-      <div class="script-actions">
-        <button class="btn-action" id="copy-btn-${s.id}" onclick="copyScript(${s.id})">คัดลอก Script</button>
-      </div>
-    </div>
   `;
 
   showScreen('screen-detail');
